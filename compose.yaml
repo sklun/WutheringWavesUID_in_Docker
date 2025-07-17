@@ -1,0 +1,60 @@
+# GsCore 网页控制台 http://127.0.0.1:8765/genshinuid/
+# NapCat http://127.0.0.1:6099/webui/
+
+# 资源/资料
+# 早柚核心Docs https://docs.sayu-bot.com/
+# 鸣潮插件 https://github.com/tyql688/WutheringWavesUID
+# 鸣潮签到插件 https://github.com/tyql688/RoverSign
+# NoneBot https://nonebot.dev/
+# NapCatQQ https://napneko.github.io/
+networks:
+    wwbot_net:
+        driver: bridge
+
+services:
+    napcat:
+        environment:
+            - NAPCAT_UID=1000
+            - NAPCAT_GID=1000
+            # - WS_URLS='["ws://127.0.0.1:3002/onebot/v11/ws"]'
+        ports:
+            - 3000:3000
+            - 3001:3001
+            - 6099:6099
+        container_name: napcat
+        restart: always
+        image: mlikiowa/napcat-docker:latest
+        volumes:
+            - ./napcat/config:/app/napcat/config
+            - ./napcat/qq_config:/app/.config/QQ
+        networks:  # 加入自定义网络
+            - wwbot_net
+
+    gsuidcore:
+        image: lilixxs666/gsuid-core:dev
+        container_name: gsuidcore
+        restart: always
+        volumes:
+            - ./gscore/gscore_data:/gsuid_core/data
+            - ./gscore/gscore_plugins:/gsuid_core/gsuid_core/plugins
+        ports:
+            - 8765:8765
+        environment:
+            TZ: Asia/Shanghai
+            GSCORE_HOST: 0.0.0.0
+        networks:
+            - wwbot_net
+
+    nonebot:
+        image: nonebot
+        pull_policy: missing
+        container_name: nonebot
+        restart: always
+        ports:
+            - 3002:3002
+        volumes:
+            - ./nonebot/app:/app
+        environment:
+            TZ: Asia/Shanghai
+        networks:
+            - wwbot_net
