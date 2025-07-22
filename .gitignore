@@ -2,3 +2,5 @@ gscore/gscore_data/*
 gscore/gscore_plugins/*
 napcat/config/*
 napcat/qq_config/*
+.DS_Store
+._*
