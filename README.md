@@ -61,7 +61,7 @@
 
    - 也可打开 napcat/config/webui.json 文件，在其中找到 token。
 
-   2. 登录 WebUI http://127.0.0.1:6099/webui/，进行如下操作：
+   2. 登录 WebUI `http://127.0.0.1:6099/webui/`，进行如下操作：
 
    - 进入 QQ 登录，点击 `QRCode` 进行二维码登录
 
@@ -73,7 +73,7 @@
 
 3. GsCore
 
-   1. 登录 GsCore 网页控制台： http://127.0.0.1:8765/genshinuid/，默认账号 `root/root`，进入之后请**务必**修改密码
+   1. 登录 GsCore 网页控制台： `http://127.0.0.1:8765/genshinuid/`，默认账号 `root/root`，进入之后请**务必**修改密码
 
    2. 进入目录 `gscore/gscore_plugins`，下载鸣潮插件
 
