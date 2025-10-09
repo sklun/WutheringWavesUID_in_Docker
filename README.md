@@ -22,8 +22,7 @@
 
    ```shell
    cd WutheringWavesUID_in_Docker/nonebot
-   docker build -t nonebot . 
-   ```
+   docker build -t nonebot .   ```
 
 4. 启动 Docker compose
 
@@ -49,11 +48,9 @@
    └── README.md
    ```
 
-   
+ ## 配置
 
-## 配置
-
-1. NapCat 
+1. NapCat
 
    1. 获取 WebUI token
 
@@ -69,7 +66,10 @@
 
 2. NoneBot
 
+   - 配置文件模板 `WutheringWavesUID_in_Docker/nonebot/app/.env.template` 在同路径下复制该文件并重命名为 `.env`
+
    - 将创建 Websocket 客户端 时填写的 `Token` 写入配置文件 `WutheringWavesUID_in_Docker/nonebot/app/.env` 中 `ONEBOT_ACCESS_TOKEN=设置的token`
+
 
 3. GsCore
 
@@ -97,7 +97,6 @@
 
    3. 库街区登录配置参照插件[补充文档地址](https://wiki.wavesuid.top/)中的"鸣潮登录帮助"
 
- 
 
 ## 资源/资料
 
