@@ -4,3 +4,4 @@ napcat/config/*
 napcat/qq_config/*
 .DS_Store
 ._*
+nonebot/app/.env
