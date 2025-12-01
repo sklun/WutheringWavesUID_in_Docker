@@ -66,7 +66,7 @@
 
 2. NoneBot
 
-   - 配置文件模板 `WutheringWavesUID_in_Docker/nonebot/app/.env.template` 在同路径下复制该文件并重命名为 `.env`
+   - 配置文件模板 `WutheringWavesUID_in_Docker/nonebot/.env.template` 将该文件复制到 `nonebot/app` 目录下并重命名为 `.env`（注意该目录不要保留 .env.template）
 
    - 将创建 Websocket 客户端 时填写的 `Token` 写入配置文件 `WutheringWavesUID_in_Docker/nonebot/app/.env` 中 `ONEBOT_ACCESS_TOKEN=设置的token`
 
@@ -78,10 +78,13 @@
    2. 进入目录 `gscore/gscore_plugins`，下载鸣潮插件
 
       ```shell
-      # WutheringWavesUID 鸣潮Bot插件 (可以在 GsCore 网页控制台插件管理中下载)
-      git clone -b master https://github.com/tyql688/WutheringWavesUID.git --depth=1 --single-branch
+      # XutheringWavesUID 鸣潮Bot插件
+      git clone -b main https://github.com/Loping151/XutheringWavesUID.git --depth=1 --single-branch
       # RoverSign 鸣潮签到插件
       git clone -b main https://github.com/tyql688/RoverSign.git --depth=1 --single-branch
+
+      # [已迁移] WutheringWavesUID 鸣潮Bot插件 (可以在 GsCore 网页控制台插件管理中下载)
+      # git clone -b master https://github.com/tyql688/WutheringWavesUID.git --depth=1 --single-branch
       ```
 
    3. 下载完成后重启 GsCore
@@ -101,7 +104,7 @@
 ## 资源/资料
 
 - [早柚核心Docs](https://docs.sayu-bot.com/)
-- [鸣潮插件](https://github.com/tyql688/WutheringWavesUID)
+- ~~[鸣潮插件](https://github.com/tyql688/WutheringWavesUID)~~ 已迁移至 [鸣潮插件](https://github.com/Loping151/XutheringWavesUID)
 - [鸣潮签到插件](https://github.com/tyql688/RoverSign)
 - [NoneBot](https://nonebot.dev/)
 - [NapCatQQ](https://napneko.github.io/)
