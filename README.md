@@ -7,7 +7,6 @@
 3. 部署 GsCore
 
 
-
 ## 部署
 
 1. Docker 环境安装不再赘述
@@ -81,10 +80,16 @@
       # XutheringWavesUID 鸣潮Bot插件
       git clone -b main https://github.com/Loping151/XutheringWavesUID.git --depth=1 --single-branch
       # RoverSign 鸣潮签到插件
-      git clone -b main https://github.com/tyql688/RoverSign.git --depth=1 --single-branch
+      git clone -b main https://github.com/Loping151/RoverSign.git --depth=1 --single-branch
+      # TodayEcho 声骸强化模拟插件
+      git clone -b main https://github.com/Loping151/TodayEcho.git --depth=1 --single-branch
+      # ScoreEcho 小维OCR识别声骸并评分
+      git clone -b main https://github.com/Loping151/ScoreEcho.git --depth=1 --single-branch
 
       # [已迁移] WutheringWavesUID 鸣潮Bot插件 (可以在 GsCore 网页控制台插件管理中下载)
       # git clone -b master https://github.com/tyql688/WutheringWavesUID.git --depth=1 --single-branch
+      # [已迁移] RoverSign 鸣潮签到插件
+      # git clone -b main https://github.com/tyql688/RoverSign.git --depth=1 --single-branch
       ```
 
    3. 下载完成后重启 GsCore
@@ -95,16 +100,21 @@
 
 4. 鸣潮插件配置
 
-   1. 登录 GsCore 网页控制台，进入`插件管理/修改插件设定`
-   2. 进入 WutheringWavesUID 配置
+    1. 登录 GsCore 网页控制台，进入`插件管理/修改插件设定`
+    2. 进入 WutheringWavesUID 配置
 
-   3. 库街区登录配置参照插件[补充文档地址](https://wiki.wavesuid.top/)中的"鸣潮登录帮助"
+    3. 库街区登录配置参照插件 ~~[补充文档地址](https://wiki.wavesuid.top/)~~ 中的"鸣潮登录帮助"
+        - 进入 首页 → 插件管理 → 修改插件设定 → WutheringWavesUID
+
+        - 配置 "鸣潮登录url"，开启 "强制【鸣潮登录url】为自己的域名"
+    4. 伤害排行需要申请 token [README](https://github.com/Loping151/XutheringWavesUID/blob/main/README.md)
+
 
 
 ## 资源/资料
 
 - [早柚核心Docs](https://docs.sayu-bot.com/)
-- ~~[鸣潮插件](https://github.com/tyql688/WutheringWavesUID)~~ 已迁移至 [鸣潮插件](https://github.com/Loping151/XutheringWavesUID)
-- [鸣潮签到插件](https://github.com/tyql688/RoverSign)
+- 鸣潮插件 ~~[WutheringWavesUID](https://github.com/tyql688/WutheringWavesUID)~~ 已迁移至 [XutheringWavesUID](https://github.com/Loping151/XutheringWavesUID)
+- 鸣潮签到插件 ~~[RoverSign](https://github.com/tyql688/RoverSign)~~ 已迁移至 [RoverSign](https://github.com/tyql688/RoverSign.git)
 - [NoneBot](https://nonebot.dev/)
 - [NapCatQQ](https://napneko.github.io/)
