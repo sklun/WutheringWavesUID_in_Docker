@@ -31,12 +31,11 @@ services:
       - wwbot_net
 
   gsuidcore:
-    image: lilixxs666/gsuid-core:dev
+    image: docker.cnb.cool/gscore-mirror/gscore-docker:latest
     container_name: gsuidcore
     restart: always
     volumes:
-      - ./gscore/gscore_data:/gsuid_core/data
-      - ./gscore/gscore_plugins:/gsuid_core/gsuid_core/plugins
+      - ./gsuid_core:/gsuid_core
     ports:
       - 8765:8765
     environment:

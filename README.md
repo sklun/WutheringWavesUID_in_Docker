@@ -21,16 +21,23 @@
 
    ```shell
    cd WutheringWavesUID_in_Docker/nonebot
-   docker build -t nonebot .   ```
+   docker build -t nonebot .
+   ```
 
-4. 启动 Docker compose
+4. 下载 gsuid_core 项目
+
+    ```bash
+    cd ..
+    git clone https://github.com/Genshin-bots/gsuid_core.git
+    ```
+
+5. 启动 Docker compose
 
    ```shell
-   cd ..
    docker compose up -d
    ```
 
-5. 部署完成后的目录结构
+6. 部署完成后的目录结构
 
    ```shell
    .
