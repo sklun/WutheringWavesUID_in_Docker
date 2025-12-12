@@ -1,7 +1,8 @@
-gscore/gscore_data/*
-gscore/gscore_plugins/*
+gsuid_core/data/
+gsuid_core/gsuid_core/plugins/
 napcat/config/*
 napcat/qq_config/*
 .DS_Store
 ._*
 nonebot/app/.env
+backup
