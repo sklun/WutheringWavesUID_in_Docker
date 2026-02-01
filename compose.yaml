@@ -31,7 +31,12 @@ services:
       - wwbot_net
 
   gsuidcore:
-    image: docker.cnb.cool/gscore-mirror/gscore-docker:latest
+    # image: docker.cnb.cool/gscore-mirror/gscore-docker:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.gscore
+      platforms:
+        - "linux/amd64"
     container_name: gsuidcore
     restart: always
     volumes:
@@ -40,7 +45,6 @@ services:
       - 8765:8765
     environment:
       TZ: Asia/Shanghai
-      GSCORE_HOST: 127.0.0.1
     networks:
       - wwbot_net
 
