@@ -6,3 +6,6 @@ napcat/qq_config/*
 ._*
 nonebot/app/.env
 backup
+nekro_agent/data/*
+nekro_agent/qdrant_data/*
+astrbot/data/*

@@ -11,11 +11,21 @@ networks:
   wwbot_net:
     driver: bridge
 
+volumes:
+  venv-data:
+
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "5m"
+    max-file: "3"
+
 services:
   napcat:
     environment:
       - NAPCAT_UID=1000
       - NAPCAT_GID=1000
+      - MODE=astrbot
       # - WS_URLS='["ws://127.0.0.1:3002/onebot/v11/ws"]'
     ports:
       # - 3000:3000 # HTTP 服务端
@@ -24,9 +34,11 @@ services:
     container_name: napcat
     restart: always
     image: mlikiowa/napcat-docker:latest
+    logging: *default-logging
     volumes:
       - ./napcat/config:/app/napcat/config
       - ./napcat/qq_config:/app/.config/QQ
+      - ./astrbot/data:/AstrBot/data
     networks:
       - wwbot_net
 
@@ -34,30 +46,94 @@ services:
     # image: docker.cnb.cool/gscore-mirror/gscore-docker:latest
     build:
       context: .
-      dockerfile: Dockerfile.gscore
+      dockerfile: gscore.Dockerfile
+      target: ${GSCORE_BUILD_TARGET:-runtime}
+      args:
+        - GSCORE_BASE_IMAGE=${GSCORE_BASE_IMAGE:-docker.cnb.cool/gscore-mirror/gscore-docker:latest}
+        - GSCORE_PYTHON_INDEX=${GSCORE_PYTHON_INDEX:-https://pypi.org/simple}
       platforms:
         - "linux/amd64"
+    image: gsuid-core:${GSCORE_BUILD_TARGET:-runtime}
+    logging: *default-logging
     container_name: gsuidcore
     restart: always
     volumes:
-      - ./gsuid_core:/gsuid_core
+      - ${MOUNT_PATH:-./gsuid_core}:/gsuid_core
+      - venv-data:/venv
     ports:
-      - 8765:8765
+      - "${PORT:-8765}:8765"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - path: ./gsuid_core/.env
+        required: false
+    environment:
+      - TZ=Asia/Shanghai
+      - PYTHONUNBUFFERED=1
+      - UV_INDEX=${GSCORE_PYTHON_INDEX:-}
+      - UV_NO_CONFIG=${UV_NO_CONFIG:-false}
+      - http_proxy=${GSCORE_HTTP_PROXY:-}
+      - https_proxy=${GSCORE_HTTPS_PROXY:-}
+      - no_proxy=${GSCORE_NO_PROXY:-localhost,127.0.0.1,.local,cnb.cool,mirrors.aliyun.com,pypi.tuna.tsinghua.edu.cn,mirrors.volces.com}
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY:-}
+    networks:
+      - wwbot_net
+
+  nonebot:
+    build:
+      context: ./nonebot
+      dockerfile: Dockerfile
+    image: nonebot2genshinuid:local
+    logging: *default-logging
+    container_name: nonebot
+    restart: always
+    ports:
+      - 3002:3002
+    env_file:
+      - path: ./nonebot/app/.env
+        required: false
     environment:
       TZ: Asia/Shanghai
     networks:
       - wwbot_net
 
-  nonebot:
-    image: sklun/nonebot2genshinuid
-    pull_policy: missing
-    container_name: nonebot
-    restart: always
-    ports:
-      - 3002:3002
-    volumes:
-      - ./nonebot/app:/app
-    environment:
-      TZ: Asia/Shanghai
-    networks:
-      - wwbot_net
+  # astrbot:
+  #   image: soulter/astrbot:latest
+  #   container_name: astrbot
+  #   restart: always
+  #   logging: *default-logging
+  #   ports:
+  #     - 6185:6185
+  #     - 9600:9600
+  #     # - 6199:6199
+  #   volumes:
+  #     - ./astrbot/data:/AstrBot/data
+  #     - /etc/localtime:/etc/localtime:ro
+  #   environment:
+  #     - TZ=Asia/Shanghai
+  #   networks:
+  #     - wwbot_net
+
+  # shipyard:
+  #   image: soulter/shipyard-bay:latest
+  #   container_name: astrbot_shipyard
+  #   restart: always
+  #   logging: *default-logging
+  #   volumes:
+  #     - ./astrbot/data/shipyard/bay_data:/app/data
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   environment:
+  #     - PORT=8156
+  #     - DATABASE_URL=sqlite+aiosqlite:///./data/bay.db
+  #     - ACCESS_TOKEN=fem.xjb7EJZ1tuv@yxv
+  #     - MAX_SHIP_NUM=10
+  #     - BEHAVIOR_AFTER_MAX_SHIP=reject
+  #     - DOCKER_IMAGE=soulter/shipyard-ship:latest
+  #     - DOCKER_NETWORK=wwbot_net
+  #     - SHIP_DATA_DIR=/AstrBot/data/shipyard/ship_mnt_data
+  #     - DEFAULT_SHIP_CPUS=1.0
+  #     - DEFAULT_SHIP_MEMORY=512m
+  #     - TZ=Asia/Shanghai
+  #   networks:
+  #     - wwbot_net
+

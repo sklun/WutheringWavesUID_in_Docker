@@ -2,59 +2,63 @@
 
 ## Docker Compose 内容
 
-1. 部署包含 nonebot-plugin-genshinuid 的 NoneBot2 环境
-2. 启动 NapCatQQ 客户端
-3. 部署 GsCore
+1. 启动 NapCatQQ 客户端（WebUI 默认端口 `6099`）
+2. 部署带 `nonebot-plugin-genshinuid` 的 NoneBot2（端口 `3002`）
+3. 部署 GsCore 网页控制台（默认端口 `8765`）
+4. （可选）启动 AstrBot（默认端口 `6185` / `9600`）
+5. （可选）启动 Shipyard，用于提供 AstrBot 沙盒环境
 
 
 ## 部署
 
-1. Docker 环境安装不再赘述
+1. Docker / Docker Compose 环境安装不再赘述
 
 2. 下载项目
 
    ```shell
-   git clone https://github.com/sklun/WutheringWavesUID_in_Docker.git
+   git clone git@github.com:sklun/WutheringWavesUID_in_Docker.git
+   cd WutheringWavesUID_in_Docker
    ```
 
-3. 构建 NoneBot 镜像
+3. 准备配置文件
 
    ```shell
-   cd WutheringWavesUID_in_Docker/nonebot
-   docker build -t nonebot .
+   cp nonebot/.env.template nonebot/app/.env
+   cp gsuid_core/.env.example gsuid_core/.env
    ```
 
-4. 下载 gsuid_core 项目
+   - `nonebot/app/.env`：用于配置 OneBot Token、NoneBot 监听地址、GsCore 地址等
+   - `gsuid_core/.env`：用于配置端口、Python 源、代理、挂载路径等
+   - `.env`、token、密码、Cookie 等敏感信息不要提交到仓库
 
-    ```bash
-    cd ..
-    git clone https://github.com/Genshin-bots/gsuid_core.git
-    ```
 
-5. 启动 Docker compose
+4. 构建并启动服务
 
    ```shell
-   docker compose up -d
+   docker compose up -d --build
    ```
 
-6. 部署完成后的目录结构
+5. 部署完成后的目录结构大致如下
 
    ```shell
    .
+   ├── astrbot
+   │   └── data
    ├── compose.yaml
-   ├── gscore
-   │   ├── gscore_data
-   │   └── gscore_plugins
+   ├── gscore.Dockerfile
+   ├── gsuid_core
    ├── napcat
-   │   ├── config
-   │   └── qq_config
+   │   ├── config
+   │   └── qq_config
    ├── nonebot
-   │   ├── app
-   │   └── Dockerfile
+   │   ├── app
+   │   ├── .env.template
+   │   └── Dockerfile
    └── README.md
    ```
 
- ## 配置
+
+## 配置
 
 1. NapCat
 
@@ -74,16 +78,36 @@
 
    - 配置文件模板 `WutheringWavesUID_in_Docker/nonebot/.env.template` 将该文件复制到 `nonebot/app` 目录下并重命名为 `.env`（注意该目录不要保留 .env.template）
 
-   - 将创建 Websocket 客户端 时填写的 `Token` 写入配置文件 `WutheringWavesUID_in_Docker/nonebot/app/.env` 中 `ONEBOT_ACCESS_TOKEN=设置的token`
+        ```env
+        PORT=3002
+        HOST=0.0.0.0
+        GSUID_CORE_HOST=gsuidcore
+        GSUID_CORE_PORT=8765
+        GSUID_CORE_WS_TOKEN=<按需设置>
+        ```
 
+   - `ONEBOT_ACCESS_TOKEN` 需要与 NapCat WebSocket 客户端保持一致
+   - `GSUID_CORE_HOST` / `GSUID_CORE_PORT` 对应 compose 中的 `gsuidcore` 服务
+   - `GSUID_CORE_WS_TOKEN` 如果启用，请与 GsCore 侧保持一致
 
 3. GsCore
 
    1. 登录 GsCore 网页控制台： `http://127.0.0.1:8765/genshinuid/`，默认账号 `root/root`，进入之后请**务必**修改密码
 
-   2. 进入目录 `gscore/gscore_plugins`，下载鸣潮插件
+   3. 可选配置位于 `gsuid_core/.env`，例如：
 
+   - `PORT`
+   - `GSCORE_PYTHON_INDEX`
+   - `GSCORE_BASE_IMAGE`
+   - `GSCORE_HTTP_PROXY`
+   - `GSCORE_HTTPS_PROXY`
+   - `GSCORE_NO_PROXY`
+
+   4. 安装鸣潮相关插件：在 GsCore 网页控制台的插件管理中安装，或进入 `gsuid_core/gsuid_core/plugins` 插件目录手动安装
+    
+    - 手动安装示例
       ```shell
+      cd gsuid_core/gsuid_core/plugins
       # XutheringWavesUID 鸣潮Bot插件
       git clone -b main https://github.com/Loping151/XutheringWavesUID.git --depth=1 --single-branch
       # RoverSign 鸣潮签到插件
@@ -99,29 +123,58 @@
       # git clone -b main https://github.com/tyql688/RoverSign.git --depth=1 --single-branch
       ```
 
-   3. 下载完成后重启 GsCore
+   5. 鸣潮登录、库街区配置、排行榜 token 等内容以对应插件文档为准
 
-      ```shell
-      docker restart gsuidcore
-      ```
+4. AstrBot / Shipyard
 
-4. 鸣潮插件配置
+   - 有需要自行取消 compose.yaml 中的注释
+   - AstrBot 默认暴露端口：`6185`、`9600`
+   - Shipyard 默认随 compose 启动，用于提供 AstrBot 沙盒环境
+   - `compose.yaml` 中涉及 `ACCESS_TOKEN` 一类的值属于部署密钥，实际使用时建议改成自己的值，不要直接对外公开
 
-    1. 登录 GsCore 网页控制台，进入`插件管理/修改插件设定`
-    2. 进入 WutheringWavesUID 配置
 
-    3. 库街区登录配置参照插件 ~~[补充文档地址](https://wiki.wavesuid.top/)~~ 中的"鸣潮登录帮助"
-        - 进入 首页 → 插件管理 → 修改插件设定 → WutheringWavesUID
+## 常用命令
 
-        - 配置 "鸣潮登录url"，开启 "强制【鸣潮登录url】为自己的域名"
-    4. 伤害排行需要申请 token [README](https://github.com/Loping151/XutheringWavesUID/blob/main/README.md)
+1. 查看服务状态
+
+   ```shell
+   docker compose ps
+   ```
+
+2. 查看 NapCat 日志
+
+   ```shell
+   docker logs -f napcat
+   ```
+
+3. 重建并启动全部服务
+
+   ```shell
+   docker compose up -d --build
+   ```
+
+4. 重启 GsCore
+
+   ```shell
+   docker restart gsuidcore
+   ```
+
+5. 停止全部服务
+
+   ```shell
+   docker compose down
+   ```
 
 
 
 ## 资源/资料
 
-- [早柚核心Docs](https://docs.sayu-bot.com/)
-- 鸣潮插件 ~~[WutheringWavesUID](https://github.com/tyql688/WutheringWavesUID)~~ 已迁移至 [XutheringWavesUID](https://github.com/Loping151/XutheringWavesUID)
-- 鸣潮签到插件 ~~[RoverSign](https://github.com/tyql688/RoverSign)~~ 已迁移至 [RoverSign](https://github.com/tyql688/RoverSign.git)
+- [早柚核心 Docs](https://docs.sayu-bot.com/)
+- [GsCore](https://github.com/Genshin-bots/gsuid_core)
 - [NoneBot](https://nonebot.dev/)
 - [NapCatQQ](https://napneko.github.io/)
+- [AstrBot](https://github.com/Soulter/AstrBot)
+- [XutheringWavesUID](https://github.com/Loping151/XutheringWavesUID)
+- [RoverSign](https://github.com/Loping151/RoverSign)
+- [TodayEcho](https://github.com/Loping151/TodayEcho)
+- [ScoreEcho](https://github.com/Loping151/ScoreEcho)
