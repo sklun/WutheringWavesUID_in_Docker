@@ -58,7 +58,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     apt-get update && apt-get install -y --no-install-recommends \
     fonts-noto-cjk \
     libffi-dev \
-    && uv pip install playwright --index ${GSCORE_PYTHON_INDEX} \
+    && uv pip install playwright fonttools opencv-python --index ${GSCORE_PYTHON_INDEX} \
     && playwright install --with-deps chromium \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
