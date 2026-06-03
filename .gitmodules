@@ -1,3 +1,4 @@
 [submodule "gsuid_core"]
 	path = gsuid_core
 	url = https://github.com/Genshin-bots/gsuid_core.git
+	ignore = all
