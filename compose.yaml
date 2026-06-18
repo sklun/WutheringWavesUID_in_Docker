@@ -39,6 +39,7 @@ services:
       - ./napcat/config:/app/napcat/config
       - ./napcat/qq_config:/app/.config/QQ
       - ./astrbot/data:/AstrBot/data
+      - ./gsuid_core/data:/gsuid_core/data:ro
     networks:
       - wwbot_net
 
@@ -96,6 +97,11 @@ services:
         required: false
     environment:
       TZ: Asia/Shanghai
+      GSCORE_SHARED_DATA_PATH: /gsuid_core/data
+      GSCORE_SHARED_IMAGE_CACHE_PATH: /gsuid_core/data/onebot_shared/images
+    volumes:
+      - ./gsuid_core/data:/gsuid_core/data:ro
+      - ./gsuid_core/data/onebot_shared:/gsuid_core/data/onebot_shared
     networks:
       - wwbot_net
 
@@ -138,4 +144,3 @@ services:
       - TZ=Asia/Shanghai
     networks:
       - wwbot_net
-

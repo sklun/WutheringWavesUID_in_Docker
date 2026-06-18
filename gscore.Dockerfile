@@ -62,6 +62,16 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     && playwright install --with-deps chromium \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install \
+    "commonx>=0.6.38" \
+    "curl-cffi" \
+    "img2pdf>=0.5.1" \
+    "pillow" \
+    "pycryptodome" \
+    "PyYAML" \
+    --index ${GSCORE_PYTHON_INDEX}
+
 # ==========================================
 # Stage 3: Runtime (挂载模式)
 # ==========================================

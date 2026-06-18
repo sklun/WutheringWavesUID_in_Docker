@@ -16,7 +16,7 @@ adapters = [
     { name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11" }
 ]
 
-plugins = ["GenshinUID"]
+plugins = ["GenshinUID", "gscore_qq_file_patch"]
 
 plugin_dirs = []
 builtin_plugins = ["echo"]
