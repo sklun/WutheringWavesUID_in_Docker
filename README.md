@@ -7,6 +7,7 @@
 3. 部署 GsCore 网页控制台（默认端口 `8765`）
 4. （可选）启动 AstrBot（默认端口 `6185` / `9600`）
 5. （可选）启动 Shipyard，用于提供 AstrBot 沙盒环境
+6. 提供 GsCore、NoneBot、NapCat 之间的共享文件目录，用于 QQ 文件发送
 
 
 ## 部署
@@ -47,6 +48,7 @@
    ├── compose.yaml
    ├── gscore.Dockerfile
    ├── gsuid_core
+   │   └── data
    ├── napcat
    │   ├── config
    │   └── qq_config
@@ -89,6 +91,8 @@
    - `ONEBOT_ACCESS_TOKEN` 需要与 NapCat WebSocket 客户端保持一致
    - `GSUID_CORE_HOST` / `GSUID_CORE_PORT` 对应 compose 中的 `gsuidcore` 服务
    - `GSUID_CORE_WS_TOKEN` 如果启用，请与 GsCore 侧保持一致
+
+   - `gscore_qq_file_patch` 用于补齐 GsCore 到 OneBot 的文件发送链路，优先使用 QQ 文件上传
 
 3. GsCore
 
@@ -159,7 +163,19 @@
    docker restart gsuidcore
    ```
 
-5. 停止全部服务
+5. 查看 NoneBot 日志
+
+   ```shell
+   docker logs -f nonebot
+   ```
+
+6. 查看 GsCore 日志
+
+   ```shell
+   docker logs -f gsuidcore
+   ```
+
+7. 停止全部服务
 
    ```shell
    docker compose down

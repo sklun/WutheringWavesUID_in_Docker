@@ -4,9 +4,12 @@ napcat/config/*
 napcat/qq_config/*
 .DS_Store
 ._*
+.idea/
 nonebot/app/.env
 backup
 nekro_agent/data/*
 nekro_agent/qdrant_data/*
 astrbot/data/*
 ams.md
+test*.py
+docs/superpowers/*
