@@ -24,13 +24,17 @@
 3. 准备配置文件
 
    ```shell
+   cp compose.template.yaml compose.yaml
    cp nonebot/.env.template nonebot/app/.env
    cp gsuid_core/.env.example gsuid_core/.env
    ```
 
+   - `compose.template.yaml`：仓库中的通用 Compose 模板
+   - `compose.yaml`：本地 Compose 配置，可在此添加挂载等部署专用配置
+   - AstrBot、Shipyard 在模板中默认注释，不会随默认配置启动
    - `nonebot/app/.env`：用于配置 OneBot Token、NoneBot 监听地址、GsCore 地址等
-   - `gsuid_core/.env`：用于配置端口、Python 源、代理、挂载路径等
-   - `.env`、token、密码、Cookie 等敏感信息不要提交到仓库
+   - `gsuid_core/.env`：用于配置端口、Python 源、代理、挂载路径及 `DASHSCOPE_API_KEY`
+   - `compose.yaml`、各服务的 `.env`、token、密码、Cookie 等本地配置不要提交到仓库
 
 
 4. 构建并启动服务
@@ -44,8 +48,11 @@
    ```shell
    .
    ├── astrbot
+   │   ├── .env
+   │   ├── .env.template
    │   └── data
    ├── compose.yaml
+   ├── compose.template.yaml
    ├── gscore.Dockerfile
    ├── gsuid_core
    │   └── data
@@ -131,10 +138,17 @@
 
 4. AstrBot / Shipyard
 
-   - 有需要自行取消 compose.yaml 中的注释
-   - AstrBot 默认暴露端口：`6185`、`9600`
-   - Shipyard 默认随 compose 启动，用于提供 AstrBot 沙盒环境
-   - `compose.yaml` 中涉及 `ACCESS_TOKEN` 一类的值属于部署密钥，实际使用时建议改成自己的值，不要直接对外公开
+   - 通用模板默认不启用 AstrBot 和 Shipyard；需要时在本地 `compose.yaml` 中取消对应完整服务块的注释
+   - AstrBot 可以单独启用，默认暴露端口：`6185`、`9600`
+   - Shipyard 用于提供 AstrBot 沙盒环境，通常与 AstrBot 一同启用
+   - 启用 Shipyard 前创建其独立环境文件：
+
+     ```shell
+     cp astrbot/.env.template astrbot/.env
+     ```
+
+   - 在 `astrbot/.env` 中填写 `DATABASE_URL`、`ACCESS_TOKEN`
+   - 数据库连接串和访问令牌不要直接写入 `compose.yaml` 或提交到仓库
 
 
 ## 常用命令

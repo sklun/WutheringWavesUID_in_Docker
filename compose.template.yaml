@@ -105,42 +105,45 @@ services:
     networks:
       - wwbot_net
 
-  astrbot:
-    image: soulter/astrbot:latest
-    container_name: astrbot
-    restart: always
-    logging: *default-logging
-    ports:
-      - 6185:6185
-      - 9600:9600
-      # - 6199:6199
-    volumes:
-      - ./astrbot/data:/AstrBot/data
-      - /etc/localtime:/etc/localtime:ro
-    environment:
-      - TZ=Asia/Shanghai
-    networks:
-      - wwbot_net
+  # 可选服务：需要时取消整个 AstrBot 服务块的注释。
+  # astrbot:
+  #   image: soulter/astrbot:latest
+  #   container_name: astrbot
+  #   restart: always
+  #   logging: *default-logging
+  #   ports:
+  #     - 6185:6185
+  #     - 9600:9600
+  #     # - 6199:6199
+  #   volumes:
+  #     - ./astrbot/data:/AstrBot/data
+  #     - /etc/localtime:/etc/localtime:ro
+  #   environment:
+  #     - TZ=Asia/Shanghai
+  #   networks:
+  #     - wwbot_net
 
-  shipyard:
-    image: soulter/shipyard-bay:latest
-    container_name: astrbot_shipyard
-    restart: always
-    logging: *default-logging
-    volumes:
-      - ./astrbot/data/shipyard/bay_data:/app/data
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      - PORT=8156
-      - DATABASE_URL=sqlite+aiosqlite:///./data/bay.db
-      - ACCESS_TOKEN=REDACTED
-      - MAX_SHIP_NUM=10
-      - BEHAVIOR_AFTER_MAX_SHIP=reject
-      - DOCKER_IMAGE=soulter/shipyard-ship:latest
-      - DOCKER_NETWORK=wwbot_net
-      - SHIP_DATA_DIR=/AstrBot/data/shipyard/ship_mnt_data
-      - DEFAULT_SHIP_CPUS=1.0
-      - DEFAULT_SHIP_MEMORY=512m
-      - TZ=Asia/Shanghai
-    networks:
-      - wwbot_net
+  # 可选服务：启用 Shipyard 前先配置 astrbot/.env，再取消整个服务块的注释。
+  # shipyard:
+  #   image: soulter/shipyard-bay:latest
+  #   container_name: astrbot_shipyard
+  #   restart: always
+  #   logging: *default-logging
+  #   env_file:
+  #     - path: ./astrbot/.env
+  #       required: true
+  #   volumes:
+  #     - ./astrbot/data/shipyard/bay_data:/app/data
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   environment:
+  #     - PORT=8156
+  #     - MAX_SHIP_NUM=10
+  #     - BEHAVIOR_AFTER_MAX_SHIP=reject
+  #     - DOCKER_IMAGE=soulter/shipyard-ship:latest
+  #     - DOCKER_NETWORK=wwbot_net
+  #     - SHIP_DATA_DIR=/AstrBot/data/shipyard/ship_mnt_data
+  #     - DEFAULT_SHIP_CPUS=1.0
+  #     - DEFAULT_SHIP_MEMORY=512m
+  #     - TZ=Asia/Shanghai
+  #   networks:
+  #     - wwbot_net

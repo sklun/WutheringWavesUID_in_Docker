@@ -2,6 +2,9 @@ gsuid_core/data/
 gsuid_core/gsuid_core/plugins/
 napcat/config/*
 napcat/qq_config/*
+/.env
+/compose.yaml
+/astrbot/.env
 .DS_Store
 ._*
 .idea/
