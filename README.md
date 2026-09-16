@@ -3,9 +3,9 @@
 ## Docker Compose 内容
 
 1. 启动 NapCatQQ 客户端（WebUI 默认端口 `6099`）
-2. 部署带 `nonebot-plugin-genshinuid` 的 NoneBot2（端口 `3002`）
+2. 部署带 `nonebot-plugin-genshinuid` 的 NoneBot2（容器内部端口 `3002`）
 3. 部署 GsCore 网页控制台（默认端口 `8765`）
-4. （可选）启动 AstrBot（默认端口 `6185` / `9600`）
+4. （可选）启动 AstrBot（管理面板默认端口 `6185`）
 5. （可选）启动 Shipyard，用于提供 AstrBot 沙盒环境
 6. 提供 GsCore、NoneBot、NapCat 之间的共享文件目录，用于 QQ 文件发送
 
@@ -139,7 +139,7 @@
 4. AstrBot / Shipyard
 
    - 通用模板默认不启用 AstrBot 和 Shipyard；需要时在本地 `compose.yaml` 中取消对应完整服务块的注释
-   - AstrBot 可以单独启用，默认暴露端口：`6185`、`9600`
+   - AstrBot 可以单独启用，默认仅向宿主机暴露管理面板端口 `6185`
    - Shipyard 用于提供 AstrBot 沙盒环境，通常与 AstrBot 一同启用
    - 启用 Shipyard 前创建其独立环境文件：
 

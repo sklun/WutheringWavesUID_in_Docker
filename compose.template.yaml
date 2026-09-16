@@ -90,8 +90,6 @@ services:
     logging: *default-logging
     container_name: nonebot
     restart: always
-    ports:
-      - 3002:3002
     env_file:
       - path: ./nonebot/app/.env
         required: false
@@ -113,7 +111,6 @@ services:
   #   logging: *default-logging
   #   ports:
   #     - 6185:6185
-  #     - 9600:9600
   #     # - 6199:6199
   #   volumes:
   #     - ./astrbot/data:/AstrBot/data
