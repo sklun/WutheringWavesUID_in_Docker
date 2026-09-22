@@ -7,7 +7,7 @@
 3. 部署 GsCore 网页控制台（默认端口 `8765`）
 4. （可选）启动 AstrBot（管理面板默认端口 `6185`）
 5. （可选）启动 Shipyard，用于提供 AstrBot 沙盒环境
-6. 提供 GsCore、NoneBot、NapCat 之间的共享文件目录，用于 QQ 文件发送
+6. 提供 GsCore、NoneBot、NapCat 之间的共享文件目录，用于 QQ 文件发送（可选与 AstrBot 共享）
 
 
 ## 部署
@@ -17,7 +17,7 @@
 2. 下载项目
 
    ```shell
-   git clone git@github.com:sklun/WutheringWavesUID_in_Docker.git
+   git clone --recurse-submodules git@github.com:sklun/WutheringWavesUID_in_Docker.git
    cd WutheringWavesUID_in_Docker
    ```
 
@@ -33,7 +33,9 @@
    - `compose.yaml`：本地 Compose 配置，可在此添加挂载等部署专用配置
    - AstrBot、Shipyard 在模板中默认注释，不会随默认配置启动
    - `nonebot/app/.env`：用于配置 OneBot Token、NoneBot 监听地址、GsCore 地址等
-   - `gsuid_core/.env`：用于配置端口、Python 源、代理、挂载路径及 `DASHSCOPE_API_KEY`
+   - `gsuid_core/.env`：传入 GsCore 容器的可选环境配置
+   - 根目录 `.env`：用于 Compose 的 `${...}` 变量插值，例如端口、挂载路径、基础镜像、Python 源和代理
+   - `gscore_runtime/`：首次启动时生成，用于持久化 Python 虚拟环境、uv 缓存和 Chromium
    - `compose.yaml`、各服务的 `.env`、token、密码、Cookie 等本地配置不要提交到仓库
 
 
@@ -42,6 +44,8 @@
    ```shell
    docker compose up -d --build
    ```
+
+   - GsCore 首次启动会按 `gsuid_core/uv.lock` 安装依赖，并下载与 Playwright 匹配的 Chromium；后续重启或重建容器会复用 `gscore_runtime/`，不会重复下载未变化的内容
 
 5. 部署完成后的目录结构大致如下
 
@@ -53,7 +57,12 @@
    │   └── data
    ├── compose.yaml
    ├── compose.template.yaml
+   ├── gscore-entrypoint.sh
    ├── gscore.Dockerfile
+   ├── gscore_runtime
+   │   ├── ms-playwright
+   │   ├── uv-cache
+   │   └── venv
    ├── gsuid_core
    │   └── data
    ├── napcat
@@ -88,6 +97,7 @@
    - 配置文件模板 `WutheringWavesUID_in_Docker/nonebot/.env.template` 将该文件复制到 `nonebot/app` 目录下并重命名为 `.env`（注意该目录不要保留 .env.template）
 
         ```env
+        ONEBOT_ACCESS_TOKEN=
         PORT=3002
         HOST=0.0.0.0
         GSUID_CORE_HOST=gsuidcore
@@ -103,16 +113,27 @@
 
 3. GsCore
 
-   1. 登录 GsCore 网页控制台： `http://127.0.0.1:8765/genshinuid/`，默认账号 `root/root`，进入之后请**务必**修改密码
+   1. 登录 GsCore 网页控制台： `http://127.0.0.1:8765/app/`，默认账号 `root/root`，进入之后请**务必**修改密码
 
-   3. 可选配置位于 `gsuid_core/.env`，例如：
+   2. Compose 可选配置位于仓库根目录 `.env`，例如：
 
    - `PORT`
+   - `MOUNT_PATH`
+   - `GSCORE_BUILD_TARGET`
    - `GSCORE_PYTHON_INDEX`
    - `GSCORE_BASE_IMAGE`
    - `GSCORE_HTTP_PROXY`
    - `GSCORE_HTTPS_PROXY`
    - `GSCORE_NO_PROXY`
+   - `UV_NO_CONFIG`
+   - `DASHSCOPE_API_KEY`
+
+   3. GsCore 运行时缓存位于 `gscore_runtime/`：
+
+   - `venv/`：根据 `uv.lock` 同步的 Python 虚拟环境，同时保留插件额外安装的依赖
+   - `uv-cache/`：uv 下载缓存
+   - `ms-playwright/`：与当前 Playwright 版本匹配的 Chromium
+   - 每次启动会执行 `uv sync --locked --inexact` 并检查 Chromium；lock 未变化时只进行快速检查
 
    4. 安装鸣潮相关插件：在 GsCore 网页控制台的插件管理中安装，或进入 `gsuid_core/gsuid_core/plugins` 插件目录手动安装
 
