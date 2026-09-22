@@ -1,0 +1,29 @@
+# Local configuration and secrets
+.env
+.env.*
+!.env.template
+app/.env
+app/.env.*
+app/nekro_agent_data/
+
+# Python environments and generated files
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.coverage
+**/htmlcov/
+**/.venv/
+**/venv/
+**/*.egg-info/
+**/build/
+**/dist/
+
+# Repository and editor metadata
+.git/
+.gitignore
+.idea/
+.vscode/
+.DS_Store
+**/.DS_Store

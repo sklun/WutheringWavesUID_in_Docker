@@ -1,0 +1,4 @@
+# The root build only uses gscore.Dockerfile and does not copy repository files.
+**
+!.dockerignore
+!gscore.Dockerfile

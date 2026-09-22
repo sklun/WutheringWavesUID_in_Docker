@@ -18,7 +18,6 @@ ENV PYTHONPATH=/app
 COPY --from=requirements_stage /tmp/bot.py /app
 COPY ./app /app/
 
-RUN pip install --no-cache-dir nonebot2 \
-  && pip install --no-cache-dir .
+RUN pip install --no-cache-dir .
 
 CMD ["python", "bot.py"]
