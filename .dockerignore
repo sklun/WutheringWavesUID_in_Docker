@@ -1,4 +1,5 @@
-# The root build only uses gscore.Dockerfile and does not copy repository files.
+# The root build only uses gscore.Dockerfile and its entrypoint script.
 **
 !.dockerignore
 !gscore.Dockerfile
+!gscore-entrypoint.sh

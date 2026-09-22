@@ -115,7 +115,7 @@
    - `GSCORE_NO_PROXY`
 
    4. 安装鸣潮相关插件：在 GsCore 网页控制台的插件管理中安装，或进入 `gsuid_core/gsuid_core/plugins` 插件目录手动安装
-    
+
     - 手动安装示例
       ```shell
       cd gsuid_core/gsuid_core/plugins

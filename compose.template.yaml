@@ -38,20 +38,18 @@ services:
     volumes:
       - ./napcat/config:/app/napcat/config
       - ./napcat/qq_config:/app/.config/QQ
-      - ./astrbot/data:/AstrBot/data
+      # - ./astrbot/data:/AstrBot/data  # 启用AstrBot时取消注释
       - ./gsuid_core/data:/gsuid_core/data:ro
     networks:
       - wwbot_net
 
   gsuidcore:
-    # image: docker.cnb.cool/gscore-mirror/gscore-docker:latest
     build:
       context: .
       dockerfile: gscore.Dockerfile
       target: ${GSCORE_BUILD_TARGET:-runtime}
       args:
-        - GSCORE_BASE_IMAGE=${GSCORE_BASE_IMAGE:-docker.cnb.cool/gscore-mirror/gscore-docker:latest}
-        - GSCORE_PYTHON_INDEX=${GSCORE_PYTHON_INDEX:-https://pypi.org/simple}
+        - GSCORE_BASE_IMAGE=${GSCORE_BASE_IMAGE:-docker.cnb.cool/gscore-mirror/gsuid_core/gscore-uv-3.12:latest}
       platforms:
         - "linux/amd64"
     image: gsuid-core:${GSCORE_BUILD_TARGET:-runtime}
@@ -61,7 +59,7 @@ services:
     restart: always
     volumes:
       - ${MOUNT_PATH:-./gsuid_core}:/gsuid_core
-      - venv-data:/venv
+      - ./gscore_runtime:/runtime   # 持久化 Python 虚拟环境、uv 缓存和 Chromium
     ports:
       - "${PORT:-8765}:8765"
     extra_hosts:
