@@ -5,6 +5,10 @@ ARG GSCORE_BASE_IMAGE=docker.cnb.cool/gscore-mirror/gsuid_core/gscore-uv-3.12:la
 
 FROM ${GSCORE_BASE_IMAGE} AS runtime
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssh-client \
+    && rm -rf /var/lib/apt/lists/*
+
 ENV UV_PROJECT_ENVIRONMENT=/runtime/venv \
     UV_CACHE_DIR=/runtime/uv-cache \
     UV_LINK_MODE=copy \
